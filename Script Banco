@@ -1,0 +1,69 @@
+CREATE DATABASE Sponte;
+
+USE Sponte;
+
+CREATE TABLE Instrutor (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Nome NVARCHAR(100) NOT NULL,
+    DataNascimento DATE NOT NULL,
+    Email NVARCHAR(100) NOT NULL,
+    Instagram NVARCHAR(100)
+);
+
+CREATE TABLE Inscrito (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Nome NVARCHAR(100) NOT NULL,
+    DataNascimento DATE NOT NULL,
+    Email NVARCHAR(100) NOT NULL,
+    Instagram NVARCHAR(100)
+);
+
+CREATE TABLE Live (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Nome NVARCHAR(100) NOT NULL,
+    Descricao NVARCHAR(500) NOT NULL,
+    InstrutorId INT NOT NULL,
+    DataInicio DATETIME NOT NULL,
+    DuracaoMinutos INT NOT NULL,
+    ValorInscricao DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (InstrutorId) REFERENCES Instrutor(Id)
+);
+
+CREATE TABLE Inscricao (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    LiveId INT NOT NULL,
+    InscritoId INT NOT NULL,
+    Valor DECIMAL(10,2) NOT NULL,
+    DataVencimento DATE NOT NULL,
+    StatusPagamento TINYINT NOT NULL,
+    FOREIGN KEY (LiveId) REFERENCES Live(Id),
+    FOREIGN KEY (InscritoId) REFERENCES Inscrito(Id)
+);
+
+INSERT INTO Instrutor (Nome, DataNascimento, Email, Instagram) 
+VALUES 
+('Maria Silva', '1985-01-15', 'maria.silva@gmail.com', 'mariasilva'), 
+('João Souza', '1990-07-12', 'joao.souza@hotmail.com', 'souzajoao'),
+('Ana Santos', '1982-04-03', 'ana.santos@yahoo.com.br', 'anasantos');
+
+INSERT INTO Inscrito (Nome, DataNascimento, Email, Instagram) 
+VALUES 
+('Pedro Rocha', '1995-03-22', 'pedro.rocha@gmail.com', 'pedrorocha'), 
+('Mariana Oliveira', '1989-11-02', 'mariana.oliveira@hotmail.com', 'oliveiramariana'),
+('Lucas Lima', '1987-09-19', 'lucas.lima@yahoo.com.br', 'lima_lucas');
+
+
+INSERT INTO Live (Nome, Descricao, InstrutorId, DataInicio, DuracaoMinutos, ValorInscricao) 
+VALUES 
+('Introdução ao .NET', 'Aprenda a criar aplicações .NET com o Visual Studio', 1, '2022-04-01 14:00:00', 120, 29.90),
+('Desenvolvimento Web com ASP.NET', 'Desenvolva aplicações web usando o framework ASP.NET', 2, '2022-05-01 16:00:00', 180, 49.90),
+('Programação Orientada a Objetos em C#', 'Aprenda os conceitos de POO em C#', 1, '2022-06-01 10:00:00', 90, 19.90);
+
+
+INSERT INTO Inscricao (LiveId, InscritoId, Valor, DataVencimento, StatusPagamento) 
+VALUES 
+(1, 1, 29.90, '2022-04-01', 1),
+(2, 2, 49.90, '2022-05-01', 0),
+(3, 3, 19.90, '2022-06-01', 1),
+(2, 1, 49.90, '2022-05-01', 1),
+(3, 2, 19.90, '2022-06-01', 0);
