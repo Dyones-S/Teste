@@ -1,6 +1,9 @@
 ﻿Imports System.Data
 Imports System.Data.Common
 Imports Microsoft.VisualBasic
+Imports AcessoDados
+
+
 
 Public Class Instrutor
     Public Shared Function Create(ByVal nome As String, ByVal dataNascimento As DateTime, ByVal email As String, ByVal enderecoInstagram As String) As Integer
@@ -45,12 +48,12 @@ Public Class Instrutor
         Return AcessoDados.ExecuteNonQuery(command)
     End Function
 
-    Public Shared Function Delete(ByVal id As Integer) As Integer
+    Public Shared Function Delete(ByVal id As Integer, acessoDados As AcessoDados) As Integer
         Dim command As DbCommand = AcessoDados.CreateCommand()
 
         command.CommandText = "DELETE FROM Instrutor WHERE Id = @Id"
-        command.Parameters.Add(AcessoDados.CreateParameter("@Id", DbType.Int32, id))
+        command.Parameters.Add(acessoDados.CreateParameter("@Id", DbType.Int32, id))
 
-        Return AcessoDados.ExecuteNonQuery(command)
+        Return acessoDados.ExecuteNonQuery(command)
     End Function
 End Class
