@@ -1,17 +1,16 @@
-﻿
-Imports System.Activities.Statements
+﻿Imports System.Activities.Statements
 Imports System.Data
 Imports System.Data.Common
 Imports System.Data.SqlClient
 Imports System.Diagnostics
 Imports System.Threading
 
-Partial Class _Default
+Partial Class Inscritos
     Inherits System.Web.UI.Page
 
-    Dim instrutorDAO As New InstrutorDAO()
+    Dim InscritoDAO As New InscritoDAO()
 
-    Protected Sub CriarInstrutor_Click(sender As Object, e As EventArgs) Handles btnAction.Click
+    Protected Sub CriarInscrito_Click(sender As Object, e As EventArgs) Handles btnAction.Click
         Dim tipo As String = Request.Form("tipo")
         Dim nome As String = Request.Form("nome")
         Dim nasc As String = Request.Form("nasc")
@@ -19,27 +18,28 @@ Partial Class _Default
         Dim instagram As String = Request.Form("instagram")
 
         If tipo > 0 Then    'Update
-            Dim instrutor As New Instrutor(nome, nasc, email, instagram)
+            Dim inscrito As New Inscrito(nome, nasc, email, instagram)
 
-            Dim retorno = InstrutorDAO.Update(instrutor, tipo)
+            Dim retorno = InscritoDAO.Update(inscrito, tipo)
+
             If retorno Then
                 HttpContext.Current.Session("statusUpdate") = True
             End If
 
-            Response.Redirect("Instrutor.aspx")
+            Response.Redirect("Inscritos.aspx")
 
-            Return
+                Return
 
 
-        Else 'Adicionar
-            Dim instrutor As New Instrutor(nome, nasc, email, instagram)
+            Else 'Adicionar
+                Dim inscrito As New Inscrito(nome, nasc, email, instagram)
 
-            Dim retorno = InstrutorDAO.Create(instrutor)
+            Dim retorno = InscritoDAO.Create(inscrito)
             If retorno Then
                 HttpContext.Current.Session("statusAdd") = True
             End If
 
-            Response.Redirect("Instrutor.aspx")
+            Response.Redirect("Inscritos.aspx")
 
             Return
 
@@ -48,19 +48,19 @@ Partial Class _Default
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        Dim instrutores = InstrutorDAO.GetAll()
+        Dim inscritos = InscritoDAO.GetAll()
 
         Dim html As String = ""
 
-        If Not IsNothing(instrutores) Then
+        If Not IsNothing(inscritos) Then
 
-            For Each instrutor As DataRow In instrutores.Rows
+            For Each inscrito As DataRow In inscritos.Rows
                 html &= "<tr>"
-                html &= "<td class='id' >" & instrutor("Id") & "</td>"
-                html &= "<td class='nome' >" & instrutor("Nome") & "</td>"
-                html &= "<td class='data' >" & Convert.ToDateTime(instrutor("DataNascimento")).ToString("dd/MM/yyyy") & "</td>"
-                html &= "<td class='email' >" & instrutor("Email") & "</td>"
-                html &= "<td class='instagram' >" & instrutor("Instagram") & "</td>"
+                html &= "<td class='id' >" & inscrito("Id") & "</td>"
+                html &= "<td class='nome' >" & inscrito("Nome") & "</td>"
+                html &= "<td class='data' >" & Convert.ToDateTime(inscrito("DataNascimento")).ToString("dd/MM/yyyy") & "</td>"
+                html &= "<td class='email' >" & inscrito("Email") & "</td>"
+                html &= "<td class='instagram' >" & inscrito("Instagram") & "</td>"
                 html &= "<td class='acoes'>"
                 html &= "<a href='#' class='editar' title='Editar'><i class='fa-regular fa-pen-to-square'></i></a>"
                 html &= "<a href='#' class='excluir' title='Excluir'><i class='fa-regular fa-x'></i></a>"
@@ -70,7 +70,7 @@ Partial Class _Default
         End If
 
         ' Adiciona o HTML na tabela
-        tabela_instrutores.InnerHtml = html
+        tabela_inscritos.InnerHtml = html
 
     End Sub
 

@@ -1,4 +1,6 @@
 ﻿
+Imports System.Configuration
+
 Public NotInheritable Class Configuracao
 
 

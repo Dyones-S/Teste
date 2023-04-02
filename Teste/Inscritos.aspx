@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPage.master" AutoEventWireup="false" CodeFile="Instrutor.aspx.vb" Inherits="_Default" %>
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPage.master" AutoEventWireup="false" CodeFile="Inscritos.aspx.vb" Inherits="Inscritos" %>
+
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
  
@@ -11,7 +12,7 @@
         function mostrarMensagem() {
             Swal.fire(
                 'Sucesso!',
-                'Instrutor cadastrado com sucesso!',
+                'Inscrito cadastrado com sucesso!',
                 'success'
             )
         }
@@ -22,23 +23,23 @@
              <% Session.Remove("statusUpdate") %>
 
         if (parametro) {
-            Swal.fire("Sucesso", "Instrutor cadastrado com sucesso!", "success");
+            Swal.fire("Sucesso", "Inscrito cadastrado com sucesso!", "success");
         }
         if (parametro2) {
-            Swal.fire("Sucesso", "Instrutor editado com sucesso!", "success");
+            Swal.fire("Sucesso", "Inscrito editado com sucesso!", "success");
         }
     </script>
 
-    <section class="instrutores">
-<div class="modal fade" id="modalInstrutores" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <section class="Inscritos">
+<div class="modal fade" id="modalInscritos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel"><span class="cadastrarE">Cadastrar</span> Instrutor</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel"><span class="cadastrarE">Cadastrar</span> Inscrito</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form id="formInstrutores" runat="server">
+            <form id="formInscritos" runat="server">
                 <input type="hidden" name="tipo" value="0" id="tipo" />
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -73,11 +74,11 @@
         <div class="container">
             <div class="glass">
                 <div class="top_info">
-                    <h2 class="page_title">Instrutores</h2>
-                    <a data-bs-toggle="modal" data-bs-target="#modalInstrutores"><i class="fa-regular fa-plus"></i></a>
+                    <h2 class="page_title">Inscritos</h2>
+                    <a data-bs-toggle="modal" data-bs-target="#modalInscritos"><i class="fa-regular fa-plus"></i></a>
                 </div>                
                 
-                <table id="instrutores" class="table table-striped w-100">
+                <table id="Inscritos" class="table table-striped w-100">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -88,7 +89,7 @@
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tbody id="tabela_instrutores" runat="server">
+                    <tbody id="tabela_inscritos" runat="server">
                        <!-- <tr>
                             <th>01</th>
                             <th>Dyones</th>
@@ -117,7 +118,7 @@
     </section>
     <script>
         $(document).ready(function () {
-            $('#instrutores').DataTable({
+            $('#Inscritos').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Portuguese-Brasil.json"
                 },
@@ -128,7 +129,7 @@
         $('.editar').click(function () {
             // obter a linha da tabela onde o botão foi clicado
             var linha = $(this).closest('tr');
-            $('#modalInstrutores').modal('show');
+            $('#modalInscritos').modal('show');
 
             $('.cadastrarE').text('Atualizar');
             $('.cadastrarE').val('Atualizar');
@@ -163,10 +164,10 @@
 
         });
 
-        $('#modalInstrutores').on('hidden.bs.modal', function () {
+        $('#modalInscritos').on('hidden.bs.modal', function () {
             // redefinir todos os campos do formulário para seus valores padrão
             $('#tipo').val(0);
-            $('#formInstrutores')[0].reset();
+            $('#formInscritos')[0].reset();
             $('.cadastrarE').text('Cadastrar');
             $('.cadastrarE').val('Cadastrar');
         });
@@ -191,7 +192,7 @@
                         $.ajax({
                             url: 'Request.aspx',
                             type: 'POST',
-                            data: { 'acao': 'deletarInstrutor', 'id' : id },
+                            data: { 'acao': 'deletarInscrito', 'id' : id },
                             dataType: 'json',
                             success: function (response) {
                                 console.log(response)
@@ -220,3 +221,4 @@
         })
     </script>
 </asp:Content>
+

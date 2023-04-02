@@ -1,17 +1,15 @@
-﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPage.master" AutoEventWireup="false" CodeFile="Instrutor.aspx.vb" Inherits="_Default" %>
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/MasterPage.master" AutoEventWireup="false" CodeFile="Lives.aspx.vb" Inherits="Lives" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
- 
-   
-</asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server"> 
 
     <script type="text/javascript">
         function mostrarMensagem() {
             Swal.fire(
                 'Sucesso!',
-                'Instrutor cadastrado com sucesso!',
+                'Live cadastrada com sucesso!',
                 'success'
             )
         }
@@ -22,43 +20,53 @@
              <% Session.Remove("statusUpdate") %>
 
         if (parametro) {
-            Swal.fire("Sucesso", "Instrutor cadastrado com sucesso!", "success");
+            Swal.fire("Sucesso", "Live cadastrada com sucesso!", "success");
         }
         if (parametro2) {
-            Swal.fire("Sucesso", "Instrutor editado com sucesso!", "success");
+            Swal.fire("Sucesso", "Live editada com sucesso!", "success");
         }
     </script>
 
-    <section class="instrutores">
-<div class="modal fade" id="modalInstrutores" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <section class="lives">
+<div class="modal fade" id="modalLives" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel"><span class="cadastrarE">Cadastrar</span> Instrutor</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel"><span class="cadastrarE">Cadastrar</span> Live</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form id="formInstrutores" runat="server">
+            <form id="formLives" runat="server">
                 <input type="hidden" name="tipo" value="0" id="tipo" />
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="nome" class="form-label">Nome</label>
+                        <label for="nome" class="form-label">Nome da live</label>
                         <input type="text" class="form-control" name="nome" required id="nome"
                             placeholder="Seu nome" />
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="nasc" class="form-label">Data de nascimento</label>
-                        <input type="date" class="form-control" name="nasc" required id="nasc" />
+                        <label for="desc" class="form-label">Descrição</label>
+                        <input type="text" class="form-control" name="desc" required id="desc" />
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="email" class="form-label">E-mail</label>
-                        <input type="text" class="form-control" name="email" required id="email"
-                            placeholder="Seu email" />
+                        <label for="inst" class="form-label">Instrutor</label>
+                        <select class="form-control" name="inst" required id="inst"  runat="server" >
+                            <option value="">Selecione um instrutor</option>
+                        </select>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="instagram" class="form-label">Instagram</label>
-                        <input type="text" class="form-control" name="instagram" required id="instagram"
-                            placeholder="Seu @ no instagram" />
+                        <label for="data" class="form-label">Data de Inicio</label>
+                        <input type="datetime-local" class="form-control" name="data" required id="data" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="duracao" class="form-label">Duração</label>
+                        <input type="number" class="form-control" name="duracao" required id="duracao"
+                            placeholder="Duracao em Minutos" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="valor" class="form-label">Valor</label>
+                        <input type="text" class="form-control" name="valor" required id="valor"
+                            placeholder="Valor" />
                     </div>
                 </div>
 
@@ -73,41 +81,33 @@
         <div class="container">
             <div class="glass">
                 <div class="top_info">
-                    <h2 class="page_title">Instrutores</h2>
-                    <a data-bs-toggle="modal" data-bs-target="#modalInstrutores"><i class="fa-regular fa-plus"></i></a>
+                    <h2 class="page_title">Lives</h2>
+                    <a data-bs-toggle="modal" data-bs-target="#modalLives"><i class="fa-regular fa-plus"></i></a>
                 </div>                
                 
-                <table id="instrutores" class="table table-striped w-100">
+                <table id="lives" class="table table-striped w-100">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nome</th>
-                            <th>Data de nascimento</th>
-                            <th>E-mail</th>
-                            <th>Endereço Instagram</th>
+                            <th>Live</th>
+                            <th>Descrição</th>
+                            <th>Instrutor</th>
+                            <th>Data e Hora de Início</th>
+                            <th>Duracao</th>
+                            <th>Valor Inscrição</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tbody id="tabela_instrutores" runat="server">
-                       <!-- <tr>
-                            <th>01</th>
-                            <th>Dyones</th>
-                            <th>13/02/2001</th>
-                            <th>dyones@gmail.com</th>
-                            <th>@Dyones</th>
-                            <td class="acoes">
-                                <a href="#" class="editar" title="Editar"><i class="fa-regular fa-pen-to-square"></i></a>
-                                <a href="#" class="excluir" title="Excluir"><i class="fa-regular fa-x"></i></a>
-                            </td>
-                        </tr> -->
+                    <tbody id="tabela_lives" runat="server">
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Data de nascimento</th>
-                            <th>E-mail</th>
-                            <th>Endereço Instagram</th>
+                            <th>Live</th>
+                            <th>Descrição</th>
+                            <th>Instrutor</th>
+                            <th>Data e Hora de Início</th>
+                            <th>Duracao</th>
+                            <th>Valor Inscrição</th>
                             <th>Ações</th>
                         </tr>
                     </tfoot>
@@ -117,7 +117,7 @@
     </section>
     <script>
         $(document).ready(function () {
-            $('#instrutores').DataTable({
+            $('#lives').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Portuguese-Brasil.json"
                 },
@@ -126,9 +126,10 @@
         });
 
         $('.editar').click(function () {
+            console.log('tessre')
             // obter a linha da tabela onde o botão foi clicado
             var linha = $(this).closest('tr');
-            $('#modalInstrutores').modal('show');
+            $('#modalLives').modal('show');
 
             $('.cadastrarE').text('Atualizar');
             $('.cadastrarE').val('Atualizar');
@@ -137,36 +138,42 @@
             // recuperar os dados na linha com as classes correspondentes
             var id = linha.find('.id').text();
             var nome = linha.find('.nome').text();
-            var email = linha.find('.email').text();
-            var instagram = linha.find('.instagram').text();
-            var data = linha.find('.data').text();
+            var descricao = linha.find('.descricao').text();
+            var instrutor = linha.find('[data-idInstrutor]').attr('data-idInstrutor');
+            console.log(instrutor)
+            var data = linha.find('.data').text();  
+            var duracaoMinutos = linha.find('.duracaoMinutos').text();
+            var valorInscricao = linha.find('.valorInscricao').text();
 
-            // obter a data no formato "dd/mm/aaaa"
-            var data = linha.find('.data').text();
 
             // dividir a string em dia, mês e ano
-            var partesData = data.split('/');
+            var dataHora = data.split(' ');
+
+            var partesData = dataHora[0].split('/');
             var dia = partesData[0];
             var mes = partesData[1];
             var ano = partesData[2];
 
             // concatenar os valores no formato "aaaa-mm-dd"
-            var dataFormatada = ano + "-" + mes + "-" + dia;
+            var dataFormatada = ano + "-" + mes + "-" + dia + "T" + dataHora[1];
 
 
             // preencher os campos do formulário com esses dados
             $('#tipo').val(id);
             $('#nome').val(nome);
-            $('#nasc').val(dataFormatada);
-            $('#email').val(email);
-            $('#instagram').val(instagram);
+            $('#desc').val(descricao);
+            $('#<%= inst.ClientID %>').val('1');
+            $('#data').val(dataFormatada);
+            $('#duracao').val(duracaoMinutos);
+            $('#valor').val(valorInscricao);
+
 
         });
 
-        $('#modalInstrutores').on('hidden.bs.modal', function () {
+        $('#modalLives').on('hidden.bs.modal', function () {
             // redefinir todos os campos do formulário para seus valores padrão
             $('#tipo').val(0);
-            $('#formInstrutores')[0].reset();
+            $('#formLives')[0].reset();
             $('.cadastrarE').text('Cadastrar');
             $('.cadastrarE').val('Cadastrar');
         });
@@ -191,7 +198,7 @@
                         $.ajax({
                             url: 'Request.aspx',
                             type: 'POST',
-                            data: { 'acao': 'deletarInstrutor', 'id' : id },
+                            data: { 'acao': 'deletarLive', 'id' : id },
                             dataType: 'json',
                             success: function (response) {
                                 console.log(response)
@@ -218,5 +225,7 @@
                 });
             
         })
+
+       
     </script>
 </asp:Content>
