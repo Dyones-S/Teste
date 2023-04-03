@@ -102,6 +102,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
+                            <th>ID</th>
                             <th>Live</th>
                             <th>Descrição</th>
                             <th>Instrutor</th>

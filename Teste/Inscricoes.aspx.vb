@@ -45,7 +45,7 @@ Partial Class Inscricoes
                 html &= "<td data-inscritoID='" & inscricao("inscritoID") & "' class='inscritoID' >" & inscricao("nomeInscrito") & "</td>"
                 html &= "<td class='valor' >" & inscricao("valor") & "</td>"
                 html &= "<td class='dataVencimento' >" & Convert.ToDateTime(inscricao("dataVencimento")).ToString("dd/MM/yyyy") & "</td>"
-                html &= "<td> <span class='statusPagamento badge badge-pill " & If(inscricao("statusPagamento") = 1, "bg-success", "bg-warning text-dark") & "' >" & If(inscricao("statusPagamento") = 1, "PAGO", "PENDENTE") & "<span> </td>"
+                html &= "<td> <span data-statusPagamento='" & inscricao("statusPagamento") & "' class='statusPagamento badge badge-pill " & If(inscricao("statusPagamento") = 1, "bg-success", "bg-warning text-dark") & "' >" & If(inscricao("statusPagamento") = 1, "PAGO", "PENDENTE") & "<span> </td>"
                 html &= "<td class='acoes'>"
                 html &= "<a href='#' class='editar' title='Editar'><i class='fa-regular fa-pen-to-square'></i></a>"
                 html &= "<a href='#' class='excluir' title='Excluir'><i class='fa-regular fa-x'></i></a>"
@@ -66,7 +66,7 @@ Partial Class Inscricoes
         Dim inscritoId_ As Integer = Request.Form(inscritoId.UniqueID)
         Dim valor As String = Request.Form("valor")
         Dim dataVencimento As Date = Request.Form("dataVencimento")
-        Dim statusPagamento As Boolean = "0"
+        Dim statusPagamento As Boolean = Request.Form("statusPagamento")
 
         Dim inscricao As New Inscricao(liveID_, inscritoId_, valor, dataVencimento, statusPagamento)
 
@@ -96,5 +96,27 @@ Partial Class Inscricoes
 
     End Sub
 
+    Private Sub pagar_Click(sender As Object, e As EventArgs) Handles pagar.Click
+
+        Dim id As String = Request.Form("tipo")
+        Dim statusPagamento As Boolean = Request.Form("statusPagamento")
+
+
+        If statusPagamento = False Then
+            statusPagamento = True
+        Else
+            statusPagamento = False
+        End If
+
+        Dim retorno = InscricaoDAO.Pagamento(id, statusPagamento)
+
+        If retorno Then
+            HttpContext.Current.Session("statusPagamento") = True
+        End If
+
+        Response.Redirect("Inscricoes.aspx")
+
+        Return
+    End Sub
 
 End Class

@@ -168,3 +168,10 @@ header nav ul li a {
     border: none;
     background : none;
 }
+
+.divLinha {
+    margin: 40px 10px;
+    background: lightgray;
+    padding: 20px 10px;
+    border-radius: 10px;
+}

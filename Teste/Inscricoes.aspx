@@ -18,17 +18,26 @@
         var parametro2 = '<%= HttpContext.Current.Session("statusUpdate") %>';
              <% Session.Remove("statusUpdate") %>
 
+        var parametro3 = '<%= HttpContext.Current.Session("statusPagamento") %>';
+             <% Session.Remove("statusPagamento") %>
+
+
         if (parametro) {
             Swal.fire("Sucesso", "Inscrição cadastrada com sucesso!", "success");
         }
         if (parametro2) {
             Swal.fire("Sucesso", "Inscrição editada com sucesso!", "success");
         }
+        if (parametro3) {
+            Swal.fire("Sucesso", "Pagamento realizado com sucesso!", "success");
+        }
+
+        
     </script>
 
     <section class="inscricoes">
 <div class="modal fade" id="modalInscricoes" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel"><span class="cadastrarE">Cadastrar</span> Inscrição</h1>
@@ -65,11 +74,16 @@
 
 
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <button type="button" class="btn btn-secondary" >Linha digitável</button>
+                <button type="button" class="btn btn-info d-none" id="linhaDig" >Linha digitável</button>
+                <asp:Button runat="server" ID="pagar" Class="btn btn-success" Text="Pagar"/>
                 <asp:Button runat="server" ID="btnAction" Class="btn btn-primary cadastrarE" Text="Cadastrar"/>
 
-                <div>
-                    <p> 00000.00000 00000.000000 00000.000000 0 00000000000</p>
+                <div class="divLinha d-none">
+                    <p id="linhaDigitavelP" class=""> 00000.00000 00000.000000 00000.000000 0 00000000000</p>
+                    <button type="button" Class="btn btn-primary w-100" id="myButton">
+                      <i class="fa fa-copy"></i>
+                      Copiar
+                    </button>
                 </div>
             </form>
         </div>
@@ -134,31 +148,20 @@
         });
 
         $('.editar').click(function () {
-            // obter a linha da tabela onde o botão foi clicado
-            var linha = $(this).closest('tr');
-            $('#modalInscricoes').modal('show');
+            var linha       = $(this).closest('tr');
+            var id          = linha.find('.id').text();
+            var liveID      = linha.find('[data-liveID]').attr('data-liveID');
+            var inscritoID  = linha.find('[data-inscritoID]').attr('data-inscritoID');
+            var valor       = linha.find('.valor').text();
+            var statusPagamento = linha.find('[data-statusPagamento]').attr('data-statusPagamento');
+            var data        = linha.find('.dataVencimento').text();
 
-            $('.cadastrarE').text('Atualizar');
-            $('.cadastrarE').val('Atualizar');
-
-
-            // recuperar os dados na linha com as classes correspondentes
-            var id = linha.find('.id').text();
-            var liveID = linha.find('[data-liveID]').attr('data-liveID');
-            var inscritoID = linha.find('[data-inscritoID]').attr('data-inscritoID');
-            var valor = linha.find('.valor').text();
-            var statusPagamento = linha.find('.statusPagamento').text();
-            
-            // obter a data no formato "dd/mm/aaaa"
-            var data = linha.find('.dataVencimento').text();
-
-            // dividir a string em dia, mês e ano
             var partesData = data.split('/');
             var dia = partesData[0];
             var mes = partesData[1];
             var ano = partesData[2];
 
-            // concatenar os valores no formato "aaaa-mm-dd"
+
             var dataVencimento = ano + "-" + mes + "-" + dia;
 
             if ($('#<%= liveID.ClientID %> option[value="' + liveID + '"]').hasClass('Realizada'))
@@ -166,18 +169,25 @@
                 $('#<%= liveID.ClientID %> option[value="' + liveID + '"]').removeAttr('hidden');
             }
 
-
-
-            // preencher os campos do formulário com esses dados
             $('#tipo').val(id);
             $('#<%= liveID.ClientID %>').val(liveID);
-
             $('#<%= inscritoID.ClientID %>').val(inscritoID);
             $('#valor').val(valor);
             $('#dataVencimento').val(dataVencimento);
             $('#statusPagamento').val(statusPagamento);
 
-            // statusPagamento
+            $('#linhaDig').removeClass('d-none');
+
+            $('#modalInscricoes').modal('show');
+            $('.cadastrarE').text('Atualizar');
+            $('.cadastrarE').val('Atualizar');
+
+            if (statusPagamento == 1) {
+                $('#<%= pagar.ClientID %>').val('Estornar');
+                $('#<%= pagar.ClientID %>').removeClass('btn-success');
+                $('#<%= pagar.ClientID %>').addClass('btn-danger');
+            }
+
         });
 
         $('#modalInscricoes').on('hidden.bs.modal', function () {
@@ -185,6 +195,9 @@
             $('#tipo').val(0);
             $('#statusPagamento').val(0);
             $('#formInscricoes')[0].reset();
+
+            $('#linhaDig').addClass('d-none');
+            $('.divLinha').addClass('d-none');
 
             $('.cadastrarE').text('Cadastrar');
             $('.cadastrarE').val('Cadastrar');
@@ -194,6 +207,12 @@
                     $(this).attr("hidden", true);
                 }
             });
+
+            if ($('#<%= pagar.ClientID %>').val() == 'Estornar') {
+                $('#<%= pagar.ClientID %>').val('Pagar');
+                $('#<%= pagar.ClientID %>').removeClass('btn-danger');
+                $('#<%= pagar.ClientID %>').addClass('btn-success');
+            }
 
         });
 
@@ -245,13 +264,16 @@
 
         })
 
-        function dataVencimento(dataVencimento) {
+        function CalcularData(dataVencimento) {
+
+            var partesData = dataVencimento.split('-');
+            var ano = partesData[0];
+            var mes = partesData[1];
+            var dia = partesData[2];
+
             var dataBase = new Date(1997, 9, 7);
-            var dataVenc = new Date(
-                parseInt(dataVencimento.substr(6, 4)),
-                parseInt(dataVencimento.substr(3, 2)) - 1,
-                parseInt(dataVencimento.substr(0, 2))
-            );
+            var dataVenc = new Date(ano, (mes - 1), dia);
+
             var digitos = (dataVenc - dataBase) / 86400000;  // 86400000 milesegunsdo de um dia
             return digitos.toString().padStart(4, "0");
         }
@@ -261,11 +283,34 @@
         }
 
         function gerarLinhaDigitavel(dataVencimento, valor) {
-            var Vencimento = dataVencimento(dataVencimento);
+            var Vencimento = CalcularData   (dataVencimento);
             var valorF = formatarValor(valor);
             var linhaDigitavel = "00000.00000 00000.000000 00000.000000 0 " + Vencimento + valorF;
             return linhaDigitavel;
         }
+
+        $('#linhaDig').click(function () {
+            $('.divLinha').removeClass('d-none');
+            var dataVencimento = $('#dataVencimento').val();
+            console.log(dataVencimento)
+            var valor = $('#valor').val();
+            $('#linhaDigitavelP').text(gerarLinhaDigitavel(dataVencimento, valor))
+        })
+
+        $("#myButton").click(function () {
+            var textToCopy = $("#myText").text();
+            navigator.clipboard.writeText(textToCopy).then(function () {
+                Swal.fire({
+                    text: 'Copiado com sucesso',
+                    timer: 1500,
+                    icon: 'success',
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end',
+                });
+            });
+        });
     </script>
 </asp:Content>
 

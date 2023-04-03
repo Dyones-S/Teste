@@ -83,4 +83,23 @@ Public Class InscricaoDAO
         End Using
     End Function
 
+    Public Shared Function Pagamento(id As Integer, statusPagamento As Boolean) As Boolean
+        Dim query As String = "UPDATE Inscricao SET statusPagamento = @statusPagamento WHERE id = @id;"
+        Using connection As New SqlConnection(connectionString)
+            Using command As New SqlCommand(query, connection)
+
+                command.Parameters.AddWithValue("@id", id)
+                command.Parameters.AddWithValue("@statusPagamento", statusPagamento)
+
+                Try
+                    connection.Open()
+                    Dim rowsAffected As Integer = command.ExecuteNonQuery()
+                    Return rowsAffected > 0
+                Catch ex As Exception
+                    Return False
+                End Try
+            End Using
+        End Using
+    End Function
+
 End Class
