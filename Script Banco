@@ -7,12 +7,7 @@ CREATE TABLE Instrutor (
     Nome NVARCHAR(100) NOT NULL,
     DataNascimento DATE NOT NULL,
     Email NVARCHAR(100) NOT NULL,
-<<<<<<< HEAD
     Instagram NVARCHAR(100)
-=======
-    Instagram NVARCHAR(100),
-    deleted_at dateTime NULL
->>>>>>> 98be6fea28bf8eec1b8ad713b9e977e6b006e699
 );
 
 CREATE TABLE Inscrito (
@@ -20,12 +15,7 @@ CREATE TABLE Inscrito (
     Nome NVARCHAR(100) NOT NULL,
     DataNascimento DATE NOT NULL,
     Email NVARCHAR(100) NOT NULL,
-<<<<<<< HEAD
     Instagram NVARCHAR(100)
-=======
-    Instagram NVARCHAR(100),
-    deleted_at dateTime NULL
->>>>>>> 98be6fea28bf8eec1b8ad713b9e977e6b006e699
 );
 
 CREATE TABLE Live (
@@ -36,12 +26,7 @@ CREATE TABLE Live (
     DataInicio DATETIME NOT NULL,
     DuracaoMinutos INT NOT NULL,
     ValorInscricao DECIMAL(10,2) NOT NULL,
-<<<<<<< HEAD
     FOREIGN KEY (InstrutorId) REFERENCES Instrutor(Id)
-=======
-    FOREIGN KEY (InstrutorId) REFERENCES Instrutor(Id),
-    deleted_at dateTime NULL
->>>>>>> 98be6fea28bf8eec1b8ad713b9e977e6b006e699
 );
 
 CREATE TABLE Inscricao (
@@ -52,12 +37,7 @@ CREATE TABLE Inscricao (
     DataVencimento DATE NOT NULL,
     StatusPagamento TINYINT NOT NULL,
     FOREIGN KEY (LiveId) REFERENCES Live(Id),
-<<<<<<< HEAD
     FOREIGN KEY (InscritoId) REFERENCES Inscrito(Id)
-=======
-    FOREIGN KEY (InscritoId) REFERENCES Inscrito(Id),
-    deleted_at dateTime NULL
->>>>>>> 98be6fea28bf8eec1b8ad713b9e977e6b006e699
 );
 
 INSERT INTO Instrutor (Nome, DataNascimento, Email, Instagram) 
