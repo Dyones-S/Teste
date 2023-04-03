@@ -140,7 +140,6 @@
             var nome = linha.find('.nome').text();
             var descricao = linha.find('.descricao').text();
             var instrutor = linha.find('[data-idInstrutor]').attr('data-idInstrutor');
-            console.log(instrutor)
             var data = linha.find('.data').text();  
             var duracaoMinutos = linha.find('.duracaoMinutos').text();
             var valorInscricao = linha.find('.valorInscricao').text();
@@ -162,7 +161,7 @@
             $('#tipo').val(id);
             $('#nome').val(nome);
             $('#desc').val(descricao);
-            $('#<%= inst.ClientID %>').val('1');
+            $('#<%= inst.ClientID %>').val(instrutor);
             $('#data').val(dataFormatada);
             $('#duracao').val(duracaoMinutos);
             $('#valor').val(valorInscricao);

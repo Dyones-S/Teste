@@ -37,6 +37,7 @@
         <div class="modal-body">
             <form id="formInscricoes" runat="server">
                 <input type="hidden" name="tipo" value="0" id="tipo" />
+                <input type="hidden" name="statusPagamento" value="0" id="statusPagamento" />
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="liveId" class="form-label">Live <button type="button" class="btnInfo" data-toggle="tooltip" data-placement="top" title="Somente lives que não aconteceram ainda vão ser listadas"><i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top"></i></button></label>
@@ -46,7 +47,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="inscritoId" class="form-label">Aluno</label>
-                        <select class="form-control" name="inscritoId" required id="inscritoId"  runat="server" >
+                        <select class="form-control" name="inscritoId" required id="inscritoId" runat="server" >
                             <option value="">Selecione um aluno</option>
                         </select>
                     </div>
@@ -64,7 +65,12 @@
 
 
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-secondary" >Linha digitável</button>
                 <asp:Button runat="server" ID="btnAction" Class="btn btn-primary cadastrarE" Text="Cadastrar"/>
+
+                <div>
+                    <p> 00000.00000 00000.000000 00000.000000 0 00000000000</p>
+                </div>
             </form>
         </div>
     </div>
@@ -138,13 +144,13 @@
 
             // recuperar os dados na linha com as classes correspondentes
             var id = linha.find('.id').text();
-            var nome = linha.find('.nome').text();
-            var email = linha.find('.email').text();
-            var instagram = linha.find('.instagram').text();
-            var data = linha.find('.data').text();
-
+            var liveID = linha.find('[data-liveID]').attr('data-liveID');
+            var inscritoID = linha.find('[data-inscritoID]').attr('data-inscritoID');
+            var valor = linha.find('.valor').text();
+            var statusPagamento = linha.find('.statusPagamento').text();
+            
             // obter a data no formato "dd/mm/aaaa"
-            var data = linha.find('.data').text();
+            var data = linha.find('.dataVencimento').text();
 
             // dividir a string em dia, mês e ano
             var partesData = data.split('/');
@@ -153,24 +159,42 @@
             var ano = partesData[2];
 
             // concatenar os valores no formato "aaaa-mm-dd"
-            var dataFormatada = ano + "-" + mes + "-" + dia;
+            var dataVencimento = ano + "-" + mes + "-" + dia;
+
+            if ($('#<%= liveID.ClientID %> option[value="' + liveID + '"]').hasClass('Realizada'))
+            {
+                $('#<%= liveID.ClientID %> option[value="' + liveID + '"]').removeAttr('hidden');
+            }
+
 
 
             // preencher os campos do formulário com esses dados
             $('#tipo').val(id);
-            $('#nome').val(nome);
-            $('#nasc').val(dataFormatada);
-            $('#email').val(email);
-            $('#instagram').val(instagram);
+            $('#<%= liveID.ClientID %>').val(liveID);
 
+            $('#<%= inscritoID.ClientID %>').val(inscritoID);
+            $('#valor').val(valor);
+            $('#dataVencimento').val(dataVencimento);
+            $('#statusPagamento').val(statusPagamento);
+
+            // statusPagamento
         });
 
         $('#modalInscricoes').on('hidden.bs.modal', function () {
             // redefinir todos os campos do formulário para seus valores padrão
             $('#tipo').val(0);
+            $('#statusPagamento').val(0);
             $('#formInscricoes')[0].reset();
+
             $('.cadastrarE').text('Cadastrar');
             $('.cadastrarE').val('Cadastrar');
+
+            $("#<%= liveID.ClientID %> option").each(function () {
+                if ($(this).hasClass("Realizada") & $(this).attr("hidden") == undefined) {
+                    $(this).attr("hidden", true);
+                }
+            });
+
         });
 
         $('.excluir').click(function () {
@@ -220,6 +244,28 @@
             });
 
         })
+
+        function dataVencimento(dataVencimento) {
+            var dataBase = new Date(1997, 9, 7);
+            var dataVenc = new Date(
+                parseInt(dataVencimento.substr(6, 4)),
+                parseInt(dataVencimento.substr(3, 2)) - 1,
+                parseInt(dataVencimento.substr(0, 2))
+            );
+            var digitos = (dataVenc - dataBase) / 86400000;  // 86400000 milesegunsdo de um dia
+            return digitos.toString().padStart(4, "0");
+        }
+
+        function formatarValor(valor) {
+            return valor.replace(",", "").padStart(10, "0");
+        }
+
+        function gerarLinhaDigitavel(dataVencimento, valor) {
+            var Vencimento = dataVencimento(dataVencimento);
+            var valorF = formatarValor(valor);
+            var linhaDigitavel = "00000.00000 00000.000000 00000.000000 0 " + Vencimento + valorF;
+            return linhaDigitavel;
+        }
     </script>
 </asp:Content>
 

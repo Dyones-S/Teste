@@ -32,6 +32,13 @@ Partial Class Request
                     result = "{""status"": ""error"", ""message"": ""Não foi possível deletar a live.""}"
                 End If
 
+            Case "deletarInscricoes"
+                If InscricaoDAO.Delete(Request.Form("id")) Then
+                    result = "{""status"": ""success"", ""message"": ""Live deletada com sucesso!""}"
+                Else
+                    result = "{""status"": ""error"", ""message"": ""Não foi possível deletar a live.""}"
+                End If
+
             Case Else
                 result = "{""status"": ""error"", ""message"": ""Ação desconhecida""}"
         End Select

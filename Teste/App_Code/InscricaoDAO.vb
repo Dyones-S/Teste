@@ -31,10 +31,10 @@ Public Class InscricaoDAO
                 command.Parameters.AddWithValue("@valor", inscricao.valor)
                 command.Parameters.AddWithValue("@dataVencimento", inscricao.dataVencimento)
                 command.Parameters.AddWithValue("@statusPagamento", inscricao.statusPagamento)
-                connection.Open()
-                Dim rowsAffected As Integer = command.ExecuteNonQuery()
-                Try
 
+                Try
+                    connection.Open()
+                    Dim rowsAffected As Integer = command.ExecuteNonQuery()
                     Return rowsAffected > 0
                 Catch ex As Exception
                     Return False
@@ -53,10 +53,10 @@ Public Class InscricaoDAO
                 command.Parameters.AddWithValue("@dataVencimento", inscricao.dataVencimento)
                 command.Parameters.AddWithValue("@statusPagamento", inscricao.statusPagamento)
                 command.Parameters.AddWithValue("@id", id)
-
+                connection.Open()
+                Dim rowsAffected As Integer = command.ExecuteNonQuery()
                 Try
-                    connection.Open()
-                    Dim rowsAffected As Integer = command.ExecuteNonQuery()
+
                     Return rowsAffected > 0
                 Catch ex As Exception
                     Return False

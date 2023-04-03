@@ -22,8 +22,8 @@ Public Class LiveDAO
         End Using
     End Function
 
-    Public Shared Function GetPendentes() As DataTable
-        Dim query As String = "SELECT * FROM Live WHERE Live.deleted_at IS NULL AND DataInicio >= GETDATE()"
+    Public Shared Function GetAllNotJoin() As DataTable
+        Dim query As String = "SELECT * FROM Live WHERE Live.deleted_at IS NULL"
         Using connection As New SqlConnection(connectionString)
             Using command As New SqlCommand(query, connection)
                 Try
