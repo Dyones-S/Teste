@@ -7,7 +7,8 @@ CREATE TABLE Instrutor (
     Nome NVARCHAR(100) NOT NULL,
     DataNascimento DATE NOT NULL,
     Email NVARCHAR(100) NOT NULL,
-    Instagram NVARCHAR(100)
+    Instagram NVARCHAR(100),
+    deleted_at dateTime NULL
 );
 
 CREATE TABLE Inscrito (
@@ -15,7 +16,8 @@ CREATE TABLE Inscrito (
     Nome NVARCHAR(100) NOT NULL,
     DataNascimento DATE NOT NULL,
     Email NVARCHAR(100) NOT NULL,
-    Instagram NVARCHAR(100)
+    Instagram NVARCHAR(100),
+    deleted_at dateTime NULL
 );
 
 CREATE TABLE Live (
@@ -26,7 +28,8 @@ CREATE TABLE Live (
     DataInicio DATETIME NOT NULL,
     DuracaoMinutos INT NOT NULL,
     ValorInscricao DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (InstrutorId) REFERENCES Instrutor(Id)
+    FOREIGN KEY (InstrutorId) REFERENCES Instrutor(Id),
+    deleted_at dateTime NULL
 );
 
 CREATE TABLE Inscricao (
@@ -37,7 +40,8 @@ CREATE TABLE Inscricao (
     DataVencimento DATE NOT NULL,
     StatusPagamento TINYINT NOT NULL,
     FOREIGN KEY (LiveId) REFERENCES Live(Id),
-    FOREIGN KEY (InscritoId) REFERENCES Inscrito(Id)
+    FOREIGN KEY (InscritoId) REFERENCES Inscrito(Id),
+    deleted_at dateTime NULL
 );
 
 INSERT INTO Instrutor (Nome, DataNascimento, Email, Instagram) 
